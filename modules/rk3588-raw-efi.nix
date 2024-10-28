@@ -6,7 +6,8 @@
   modulesPath,
   nixos-generators,
   ...
-}: let
+}:
+let
   # Import raw-efi from nixos-generators
   raw-efi = nixos-generators.nixosModules.raw-efi;
 
@@ -15,9 +16,10 @@
     cp -r ${config.boot.kernelPackages.kernel}/dtbs/rockchip/* /boot/dtb/base/
     sync
   '';
-in {
+in
+{
   # Reuse and extend the raw-efi format
-  imports = [raw-efi];
+  imports = [ raw-efi ];
 
   boot.loader = {
     systemd-boot.extraInstallCommands = extraInstallCommands;

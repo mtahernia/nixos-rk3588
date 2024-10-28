@@ -24,19 +24,35 @@
   modulesPath,
   ...
 }:
-with lib; let
-  rootfsImage = pkgs.callPackage "${modulesPath}/../lib/make-ext4-fs.nix" ({
+with lib;
+let
+  rootfsImage = pkgs.callPackage "${modulesPath}/../lib/make-ext4-fs.nix" (
+    {
       inherit (config.sdImage) storePaths compressImage;
       populateImageCommands = config.sdImage.populateRootCommands;
       volumeLabel = "NIXOS_SD";
     }
     // optionalAttrs (config.sdImage.rootPartitionUUID != null) {
       uuid = config.sdImage.rootPartitionUUID;
-    });
-in {
+    }
+  );
+in
+{
   imports = [
-    (mkRemovedOptionModule ["sdImage" "bootPartitionID"] "The FAT partition for SD image now only holds the Raspberry Pi firmware files. Use firmwarePartitionID to configure that partition's ID.")
-    (mkRemovedOptionModule ["sdImage" "bootSize"] "The boot files for SD image have been moved to the main ext4 partition. The FAT partition now only holds the Raspberry Pi firmware files. Changing its size may not be required.")
+    (mkRemovedOptionModule
+      [
+        "sdImage"
+        "bootPartitionID"
+      ]
+      "The FAT partition for SD image now only holds the Raspberry Pi firmware files. Use firmwarePartitionID to configure that partition's ID."
+    )
+    (mkRemovedOptionModule
+      [
+        "sdImage"
+        "bootSize"
+      ]
+      "The boot files for SD image have been moved to the main ext4 partition. The FAT partition now only holds the Raspberry Pi firmware files. Changing its size may not be required."
+    )
     "${modulesPath}/profiles/all-hardware.nix"
   ];
 
@@ -168,7 +184,10 @@ in {
         # Alternatively, this could be removed from the configuration.
         # The filesystem is not needed at runtime, it could be treated
         # as an opaque blob instead of a discrete FAT32 filesystem.
-        options = ["nofail" "noauto"];
+        options = [
+          "nofail"
+          "noauto"
+        ];
       };
       "/" = {
         device = "/dev/disk/by-label/NIXOS_SD";
@@ -176,23 +195,28 @@ in {
       };
     };
 
-    sdImage.storePaths = [config.system.build.toplevel];
+    sdImage.storePaths = [ config.system.build.toplevel ];
 
-    system.build.sdImage = pkgs.callPackage ({
-      stdenv,
-      dosfstools,
-      e2fsprogs,
-      mtools,
-      libfaketime,
-      util-linux,
-      zstd,
-    }:
+    system.build.sdImage = pkgs.callPackage (
+      {
+        stdenv,
+        dosfstools,
+        e2fsprogs,
+        mtools,
+        libfaketime,
+        util-linux,
+        zstd,
+      }:
       stdenv.mkDerivation {
         name = config.sdImage.imageName;
 
-        nativeBuildInputs =
-          [dosfstools e2fsprogs libfaketime mtools util-linux]
-          ++ lib.optional config.sdImage.compressImage zstd;
+        nativeBuildInputs = [
+          dosfstools
+          e2fsprogs
+          libfaketime
+          mtools
+          util-linux
+        ] ++ lib.optional config.sdImage.compressImage zstd;
 
         inherit (config.sdImage) imageName compressImage;
 
@@ -278,7 +302,8 @@ in {
               zstd -T$NIX_BUILD_CORES --rm $img
           fi
         '';
-      }) {};
+      }
+    ) { };
 
     boot.postBootCommands = lib.mkIf config.sdImage.expandOnBoot ''
       # On the first boot do some maintenance tasks

@@ -6,7 +6,8 @@ let
   hashedPassword = "$y$j9T$V7M5HzQFBIdfNzVltUxFj/$THE5w.7V7rocWFm06Oh8eFkAKkUFb5u6HVZvXyjekK6";
   # TODO replace this with your own public key!
   publickey = "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIK3F3AH/vKnA2vxl72h67fcxhIK8l+7F/bdE1zmtwTVU ryan@romantic";
-in {
+in
+{
   # =========================================================================
   #      Users & Groups NixOS Configuration
   # =========================================================================
@@ -18,7 +19,11 @@ in {
     inherit hashedPassword;
     isNormalUser = true;
     home = "/home/${username}";
-    extraGroups = ["users" "wheel" "docker"];
+    extraGroups = [
+      "users"
+      "wheel"
+      "docker"
+    ];
     openssh.authorizedKeys.keys = [
       publickey
     ];
@@ -29,7 +34,7 @@ in {
   ];
 
   users.groups = {
-    "${username}" = {};
-    docker = {};
+    "${username}" = { };
+    docker = { };
   };
 }

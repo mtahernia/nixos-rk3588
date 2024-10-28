@@ -5,15 +5,19 @@
   pkgs,
   rk3588,
   ...
-}: let
+}:
+let
   pkgsKernel = rk3588.pkgsKernel;
-in {
+in
+{
   imports = [
     ./base.nix
   ];
 
   boot = {
-    kernelPackages = pkgsKernel.linuxPackagesFor (pkgsKernel.callPackage ../../pkgs/kernel/vendor.nix {});
+    kernelPackages = pkgsKernel.linuxPackagesFor (
+      pkgsKernel.callPackage ../../pkgs/kernel/vendor.nix { }
+    );
 
     # kernelParams copy from Armbian's /boot/armbianEnv.txt & /boot/boot.cmd
     kernelParams = [
@@ -38,11 +42,11 @@ in {
   hardware = {
     deviceTree = {
       name = "rockchip/rk3588s-orangepi-5.dtb";
-      overlays = [];
+      overlays = [ ];
     };
 
     firmware = [
-      (pkgs.callPackage ../../pkgs/orangepi-firmware {})
+      (pkgs.callPackage ../../pkgs/orangepi-firmware { })
     ];
   };
 }

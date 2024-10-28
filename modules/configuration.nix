@@ -2,14 +2,19 @@
   lib,
   pkgs,
   ...
-}: let
-  username = "rk";
+}:
+let
+  username = "mehrdad";
   # To generate a hashed password run `mkpasswd -m scrypt`.
   # this is the hash of the password "rk3588"
-  hashedPassword = "$y$j9T$V7M5HzQFBIdfNzVltUxFj/$THE5w.7V7rocWFm06Oh8eFkAKkUFb5u6HVZvXyjekK6";
-in {
+  hashedPassword = "$y$j9T$DFwrh.VfDjva9Bam/wdq51$.Md0WSSV4xMIlqj8qiZL5c03k/8fnc1vIRSSziGJEf/";
+in
+{
   nix.settings = {
-    experimental-features = ["nix-command" "flakes"];
+    experimental-features = [
+      "nix-command"
+      "flakes"
+    ];
   };
 
   # List packages installed in system profile. To search, run:
@@ -47,8 +52,11 @@ in {
     inherit hashedPassword;
     isNormalUser = true;
     home = "/home/${username}";
-    extraGroups = ["users" "wheel"];
+    extraGroups = [
+      "users"
+      "wheel"
+    ];
   };
 
-  system.stateVersion = "23.11";
+  system.stateVersion = "24.11";
 }

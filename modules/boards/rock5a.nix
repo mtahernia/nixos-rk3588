@@ -1,15 +1,19 @@
 # =========================================================================
 #      Rock 5 Model A Specific Configuration
 # =========================================================================
-{rk3588, ...}: let
+{ rk3588, ... }:
+let
   pkgsKernel = rk3588.pkgsKernel;
-in {
+in
+{
   imports = [
     ./base.nix
   ];
 
   boot = {
-    kernelPackages = pkgsKernel.linuxPackagesFor (pkgsKernel.callPackage ../../pkgs/kernel/vendor.nix {});
+    kernelPackages = pkgsKernel.linuxPackagesFor (
+      pkgsKernel.callPackage ../../pkgs/kernel/vendor.nix { }
+    );
 
     # kernelParams copy from rock5a's official debian image's /boot/extlinux/extlinux.conf
     # https://www.kernel.org/doc/html/latest/admin-guide/kernel-parameters.html
@@ -47,9 +51,9 @@ in {
     deviceTree = {
       # https://github.com/radxa/overlays/blob/main/arch/arm64/boot/dts/rockchip/overlays/
       name = "rockchip/rk3588s-rock-5a.dtb";
-      overlays = [];
+      overlays = [ ];
     };
 
-    firmware = [];
+    firmware = [ ];
   };
 }

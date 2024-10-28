@@ -7,11 +7,12 @@
 # If you already have a generated configuration file, you can build a kernel that uses it with pkgs.linuxManualConfig
 # The difference between deconfig and the generated configuration file is that the generated configuration file is more complete,
 #
-{ fetchFromGitHub
-, linuxManualConfig
-, ubootTools
-, fetchurl
-, ...
+{
+  fetchFromGitHub,
+  linuxManualConfig,
+  ubootTools,
+  fetchurl,
+  ...
 }:
 let
   modDirVersion = "6.1.75";
@@ -34,16 +35,18 @@ in
 
   # https://github.com/hbiyik/linux/tree/rk-6.1-rkr3-panthor
   # allows usage of mainline mesa
-  kernelPatches = [{
-    name = "hbiyik-panthor.patch";
-    # NOTE: This needs to be `fetchurl` instead of `fetchpatch`, because `fetchpatch`
-    # reorders the patches, and the order matters since they're generated from commits.
-    patch = fetchurl {
-      url = "https://github.com/hbiyik/linux/compare/${panthor-base}...${panthor-head}.patch";
-      hash = "sha256-/5SvlGsgHbn1i68+GASOeNZmxoZiIt280L6iUFz3MFU=";
-    };
-    extraConfig = { };
-  }];
+  kernelPatches = [
+    {
+      name = "hbiyik-panthor.patch";
+      # NOTE: This needs to be `fetchurl` instead of `fetchpatch`, because `fetchpatch`
+      # reorders the patches, and the order matters since they're generated from commits.
+      patch = fetchurl {
+        url = "https://github.com/hbiyik/linux/compare/${panthor-base}...${panthor-head}.patch";
+        hash = "sha256-/5SvlGsgHbn1i68+GASOeNZmxoZiIt280L6iUFz3MFU=";
+      };
+      extraConfig = { };
+    }
+  ];
 
   # Steps to the generated kernel config file
   #  1. git clone --depth 1 https://github.com/hbiyik/linux.git -b rk-6.1-rkr3-panthor
@@ -55,7 +58,8 @@ in
   # 
   configfile = ./rk35xx_vendor_config;
   config = import ./rk35xx_vendor_config.nix;
-}).overrideAttrs (old: {
-  name = "k"; # dodge uboot length limits
-  nativeBuildInputs = old.nativeBuildInputs ++ [ ubootTools ];
-})
+}).overrideAttrs
+  (old: {
+    name = "k"; # dodge uboot length limits
+    nativeBuildInputs = old.nativeBuildInputs ++ [ ubootTools ];
+  })

@@ -3,9 +3,11 @@
   config,
   rk3588,
   ...
-}: let
+}:
+let
   rootPartitionUUID = "14e19a7b-0ae0-484d-9d54-43bd6fdc20c7";
-in {
+in
+{
   imports = [
     "${rk3588.nixpkgs}/nixos/modules/installer/sd-card/sd-image-aarch64.nix"
   ];
@@ -84,7 +86,7 @@ in {
       ];
     };
 
-    firmware = [];
+    firmware = [ ];
   };
 
   sdImage = {

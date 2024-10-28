@@ -19,7 +19,7 @@
   # https://github.com/radxa/u-boot/blob/stable-5.10-rock5/configs/rock-5a-rk3588s_defconfig
   defconfig = "rock-5a-rk3588s_defconfig";
 
-  extraMeta.platforms = ["aarch64-linux"];
+  extraMeta.platforms = [ "aarch64-linux" ];
   BL31 = "${rkbin-rk3588}/rk3588_bl31_v1.38.elf";
 
   buildPhase = ''
@@ -38,7 +38,7 @@
     "u-boot.itb"
     "idbloader.img"
   ];
-})
-.overrideAttrs (oldAttrs: {
-  patches = []; # remove all patches, which is not compatible with thead-u-boot
-})
+}).overrideAttrs
+  (oldAttrs: {
+    patches = [ ]; # remove all patches, which is not compatible with thead-u-boot
+  })

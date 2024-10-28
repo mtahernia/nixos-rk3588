@@ -5,15 +5,19 @@
   pkgs,
   rk3588,
   ...
-}: let
+}:
+let
   pkgsKernel = rk3588.pkgsKernel;
-in {
+in
+{
   imports = [
     ./base.nix
   ];
 
   boot = {
-    kernelPackages = pkgsKernel.linuxPackagesFor (pkgsKernel.callPackage ../../pkgs/kernel/vendor.nix {});
+    kernelPackages = pkgsKernel.linuxPackagesFor (
+      pkgsKernel.callPackage ../../pkgs/kernel/vendor.nix { }
+    );
 
     # kernelParams copy from Armbian's /boot/armbianEnv.txt & /boot/boot.cmd
     kernelParams = [
@@ -39,12 +43,13 @@ in {
     deviceTree = {
       # https://github.com/armbian/build/blob/f9d7117/config/boards/orangepi5-plus.wip#L10C51-L10C51
       name = "rockchip/rk3588-orangepi-5-plus.dtb";
-      overlays = [
-      ];
+      overlays =
+        [
+        ];
     };
 
     firmware = [
-      (pkgs.callPackage ../../pkgs/orangepi-firmware {})
+      (pkgs.callPackage ../../pkgs/orangepi-firmware { })
     ];
   };
 }

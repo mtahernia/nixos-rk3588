@@ -3,7 +3,8 @@
   pkgs,
   nixpkgs,
   ...
-}: {
+}:
+{
   # =========================================================================
   #      Base NixOS Configuration
   # =========================================================================
@@ -20,14 +21,17 @@
     auto-optimise-store = true;
     builders-use-substitutes = true;
     # enable flakes globally
-    experimental-features = ["nix-command" "flakes"];
+    experimental-features = [
+      "nix-command"
+      "flakes"
+    ];
   };
 
   # make `nix run nixpkgs#nixpkgs` use the same nixpkgs as the one used by this flake.
   nix.registry.nixpkgs.flake = nixpkgs;
   # make `nix repl '<nixpkgs>'` use the same nixpkgs as the one used by this flake.
   environment.etc."nix/inputs/nixpkgs".source = "${nixpkgs}";
-  nix.nixPath = ["/etc/nix/inputs"];
+  nix.nixPath = [ "/etc/nix/inputs" ];
 
   # List packages installed in system profile. To search, run:
   # $ nix search wget
